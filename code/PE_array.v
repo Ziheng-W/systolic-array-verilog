@@ -12,8 +12,8 @@
   PE阵列，具有向阵列两侧的其他阵列传输数据的接口
 */
 module systolic #(
-  parameter DATA_WIDTH = 16,
-  parameter DIM = 3
+  parameter DATA_WIDTH = 8,
+  parameter DIM = 8
 )(
   input clk,
   input[DATA_WIDTH*DIM-1:0] i_1, //向下输入
@@ -87,8 +87,8 @@ endmodule
   边缘的PE阵列，由于其后没有需要继续传输数据的阵列了，就只安排了计算结果的输出接口
 */
 module systolic_edge #(
-  parameter DATA_WIDTH = 16,
-  parameter DIM = 3
+  parameter DATA_WIDTH = 8,
+  parameter DIM = 8
 )(
   input clk,
   input[DATA_WIDTH*DIM-1:0] i_1, //向下输入

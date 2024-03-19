@@ -1,0 +1,22 @@
+#! /usr/local/bin/vvp
+:ivl_version "13.0 (devel)" "(s20221226-56-g45bd0968c)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "/usr/local/lib/ivl/system.vpi";
+:vpi_module "/usr/local/lib/ivl/vhdl_sys.vpi";
+:vpi_module "/usr/local/lib/ivl/vhdl_textio.vpi";
+:vpi_module "/usr/local/lib/ivl/v2005_math.vpi";
+:vpi_module "/usr/local/lib/ivl/va_math.vpi";
+S_0x562c1dd77df0 .scope module, "main" "main" 2 3;
+ .timescale 0 0;
+    .scope S_0x562c1dd77df0;
+T_0 ;
+    %vpi_call 2 7 "$display", "Hello World" {0 0 0};
+    %vpi_call 2 8 "$finish" {0 0 0};
+    %end;
+    .thread T_0;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "./hello.v";

@@ -68,8 +68,8 @@ module input_array #( // 对上面的模块打包
   parameter NUM = 8
 ) (
   input clk,
-  input [DATA_WIDTH*NUM-1:0] in,
-  output [DATA_WIDTH*SIZE*NUM-1:0] out
+  input [DATA_WIDTH*NUM-1 : 0] in,
+  output [DATA_WIDTH*SIZE*NUM-1 : 0] out
 );
   reg flag = 0; 
   reg [$clog2(SIZE)-1:0] counter = 0;
@@ -87,8 +87,8 @@ module input_array #( // 对上面的模块打包
     for(i=0; i<NUM; i=i+1) begin: array_of_shifters 
       input_element #(DATA_WIDTH, SIZE) shifter (
         clk, flag, 
-        in[(i+1)*DATA_WIDTH -: DATA_WIDTH], 
-        out[(i+1)*DATA_WIDTH*SIZE -: DATA_WIDTH*SIZE]
+        in[(i+1)*DATA_WIDTH-1 -: DATA_WIDTH], 
+        out[(i+1)*DATA_WIDTH*SIZE-1 -: DATA_WIDTH*SIZE]
       ); 
     end
   endgenerate
