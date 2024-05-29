@@ -72,7 +72,7 @@ module invert #(
   integer i;
   always @ (in) for (i=1; i<=LENGTH; i=i+1)
       out[DATA_WIDTH*i -1 -: DATA_WIDTH] 
-    = in[DATA_WIDTH*(LENGTH-i) -1 -: DATA_WIDTH];
+    = in[DATA_WIDTH*(LENGTH-i+1) -1 -: DATA_WIDTH];
 endmodule
 
 /*---------------------------------- Triangle Register Arrays ----------------------------------*/
