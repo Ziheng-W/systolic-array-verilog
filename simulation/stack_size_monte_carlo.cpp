@@ -4,21 +4,32 @@
 # include <stdlib.h>
 # include <vector>
 # include <algorithm>
+#include <cstdlib>
 
 using namespace std;
 
 bool randint(float p);
-int max_stack_size_1(int vector_size, float p);
-int max_stack_size_2(int vector_size, float p);
-int max_stack_size_4(int vector_size, float p);
-int max_stack_size_8(int vector_size, float p);
-float monte_carlo(int vector_size, float p, int times = 1000 );
+int max_stack_size_1(int vector_size, float p1, float p2);
+int max_stack_size_2(int vector_size, float p1, float p2);
+int max_stack_size_4(int vector_size, float p1, float p2);
+int max_stack_size_8(int vector_size, float p1, float p2);
+float monte_carlo(int vector_size, float p1, float p2, int times = 1000);
 
-int main(){
+int main(int argc, char *argv[]){
   srand((unsigned)time(NULL));
-  for (int i=0; i<1; i++){
-      cout<<monte_carlo(50,0.2)<<", ";
+
+  int size = atoi(argv[1]);
+  float p1 = atof(argv[2]);
+  float p2 = atof(argv[3]);
+  cout<<size<<" "<<p1<<" "<<p2<<", 1000 times for each"<<endl;
+  cout<<"Results: "<<endl;
+  for(int j=0; j<5; j++){
+    cout<<"      ";
+    for (int i=0; i<10; i++){
+      cout<<monte_carlo(size,p1,p2)<<", ";
+    } cout<<endl;
   } cout<<endl;
+  
   return 0;
 }
 
@@ -28,7 +39,7 @@ bool randint(float p){
     return (rand()%100000 < p*100000);
 }
 
-int max_stack_size_1(int vector_size, float p){
+int max_stack_size_1(int vector_size, float p1, float p2){
 
 /* index vectors  */
   vector<int> v1{-1};
@@ -36,19 +47,19 @@ int max_stack_size_1(int vector_size, float p){
   vector<int> v_match{-3}; // a record for the matched indices
   for (int i=0; i<vector_size; i++) {
     bool on_1{}, on_2{};
-    if (randint(p)) {v1.push_back(i); on_1 = true;}
-    if (randint(p)) {v2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v1.push_back(i); on_1 = true;}
+    if (randint(p2)) {v2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v_match.push_back(i);  
   }
-  // for (int i=0; i<v1.size(); i++){ //test output for generated vectors
-  //   cout<<v1[i]<<" ";
-  // } cout<<endl; 
-  // for (int i=0; i<v2.size(); i++){
-  //   cout<<v2[i]<<" ";
-  // } cout<<endl;
-  // for (int i=0; i<v_match.size(); i++){
-  //   cout<<v_match[i]<<" ";
-  // } cout<<endl;
+  for (int i=0; i<v1.size(); i++){ //test output for generated vectors
+    cout<<v1[i]<<" ";
+  } cout<<endl; 
+  for (int i=0; i<v2.size(); i++){
+    cout<<v2[i]<<" ";
+  } cout<<endl;
+  for (int i=0; i<v_match.size(); i++){
+    cout<<v_match[i]<<" ";
+  } cout<<endl;
 
 /* simulate how pe takes in those 2 vectors */
   int max_length = max(v1.size(), v2.size());
@@ -79,7 +90,7 @@ int max_stack_size_1(int vector_size, float p){
   return max_stack_size;
 }
 
-int max_stack_size_2(int vector_size, float p){
+int max_stack_size_2(int vector_size, float p1, float p2){
 
 /* index vectors  */
   vector<int> v1_1{-1};
@@ -90,12 +101,12 @@ int max_stack_size_2(int vector_size, float p){
   vector<int> v2_match{-3}; // a record for the matched indices
   for (int i=0; i<vector_size; i++) {
     bool on_1{}, on_2{};
-    if (randint(p)) {v1_1.push_back(i); on_1 = true;}
-    if (randint(p)) {v1_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v1_1.push_back(i); on_1 = true;}
+    if (randint(p2)) {v1_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v1_match.push_back(i);  
     on_1 = false; on_2 = false;
-    if (randint(p)) {v2_1.push_back(i); on_1 = true;}
-    if (randint(p)) {v2_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v2_1.push_back(i); on_1 = true;}
+    if (randint(p2)) {v2_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v2_match.push_back(i);  
   }
 
@@ -134,7 +145,7 @@ int max_stack_size_2(int vector_size, float p){
   return max_stack_size;
 }
 
-int max_stack_size_4(int vector_size, float p){
+int max_stack_size_4(int vector_size, float p1, float p2){
 
 /* index vectors  */
   vector<int> v1_1{-1};
@@ -151,20 +162,20 @@ int max_stack_size_4(int vector_size, float p){
   vector<int> v4_match{-3}; // a record for the matched indices
   for (int i=0; i<vector_size; i++) {
     bool on_1{}, on_2{};
-    if (randint(p)) {v1_1.push_back(i); on_1 = true;}
-    if (randint(p)) {v1_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v1_1.push_back(i); on_1 = true;}
+    if (randint(p2)) {v1_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v1_match.push_back(i);  
     on_1 = false; on_2 = false;
-    if (randint(p)) {v2_1.push_back(i); on_1 = true;}
-    if (randint(p)) {v2_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v2_1.push_back(i); on_1 = true;}
+    if (randint(p2)) {v2_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v2_match.push_back(i);  
     on_1 = false; on_2 = false;
-    if (randint(p)) {v3_1.push_back(i); on_1 = true;}
-    if (randint(p)) {v3_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v3_1.push_back(i); on_1 = true;}
+    if (randint(p2)) {v3_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v3_match.push_back(i);  
     on_1 = false; on_2 = false;
-    if (randint(p)) {v4_1.push_back(i); on_1 = true;}
-    if (randint(p)) {v4_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v4_1.push_back(i); on_1 = true;}
+    if (randint(p2)) {v4_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v4_match.push_back(i);  
   }
 
@@ -223,7 +234,7 @@ int max_stack_size_4(int vector_size, float p){
   return max_stack_size;
 }
 
-int max_stack_size_8(int vector_size, float p){
+int max_stack_size_8(int vector_size, float p1, float p2){
 
 /* index vectors  */
   vector<int> v1_1{-1};
@@ -252,36 +263,36 @@ int max_stack_size_8(int vector_size, float p){
   vector<int> v8_match{-3}; // a record for the matched indices
   for (int i=0; i<vector_size; i++) {
     bool on_1{}, on_2{};
-    if (randint(p)) {v1_1.push_back(i); on_1 = true;} // 1
-    if (randint(p)) {v1_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v1_1.push_back(i); on_1 = true;} // 1
+    if (randint(p2)) {v1_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v1_match.push_back(i);  
     on_1 = false; on_2 = false;
-    if (randint(p)) {v2_1.push_back(i); on_1 = true;} // 2
-    if (randint(p)) {v2_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v2_1.push_back(i); on_1 = true;} // 2
+    if (randint(p2)) {v2_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v2_match.push_back(i);  
     on_1 = false; on_2 = false;
-    if (randint(p)) {v3_1.push_back(i); on_1 = true;} // 3
-    if (randint(p)) {v3_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v3_1.push_back(i); on_1 = true;} // 3
+    if (randint(p2)) {v3_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v3_match.push_back(i);  
     on_1 = false; on_2 = false;
-    if (randint(p)) {v4_1.push_back(i); on_1 = true;} // 4
-    if (randint(p)) {v4_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v4_1.push_back(i); on_1 = true;} // 4
+    if (randint(p2)) {v4_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v4_match.push_back(i);  
     on_1 = false; on_2 = false;
-    if (randint(p)) {v5_1.push_back(i); on_1 = true;} // 5
-    if (randint(p)) {v5_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v5_1.push_back(i); on_1 = true;} // 5
+    if (randint(p2)) {v5_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v5_match.push_back(i);  
     on_1 = false; on_2 = false;
-    if (randint(p)) {v6_1.push_back(i); on_1 = true;} // 6
-    if (randint(p)) {v6_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v6_1.push_back(i); on_1 = true;} // 6
+    if (randint(p2)) {v6_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v6_match.push_back(i);  
     on_1 = false; on_2 = false;
-    if (randint(p)) {v7_1.push_back(i); on_1 = true;} // 7
-    if (randint(p)) {v7_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v7_1.push_back(i); on_1 = true;} // 7
+    if (randint(p2)) {v7_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v7_match.push_back(i);  
     on_1 = false; on_2 = false;
-    if (randint(p)) {v8_1.push_back(i); on_1 = true;} // 8
-    if (randint(p)) {v8_2.push_back(i); on_2 = true;}
+    if (randint(p1)) {v8_1.push_back(i); on_1 = true;} // 8
+    if (randint(p2)) {v8_2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v8_match.push_back(i);  
   }
 
@@ -388,14 +399,14 @@ int max_stack_size_8(int vector_size, float p){
   return max_stack_size;
 }
 
-float monte_carlo(int vector_size, float p, int times){
+float monte_carlo(int vector_size, float p1, float p2, int times){
   float temp_sum{};
   float temp_max{};
   for (int i=0; i<times; i++){
-    // float temp_result = max_stack_size_1(vector_size, p);
+    // float temp_result = max_stack_size_1(vector_size, p1, p2);
     // float temp_result = 0.5*max_stack_size_2(vector_size, p);
     // float temp_result = 0.25*max_stack_size_4(vector_size, p);
-    float temp_result = 0.125*max_stack_size_8(vector_size, p);
+    float temp_result = 0.125*max_stack_size_8(vector_size, p1,p2);
     temp_max = max(temp_max, temp_result);
   }
   return temp_max;
