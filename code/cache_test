@@ -1,0 +1,135 @@
+#! /usr/local/bin/vvp
+:ivl_version "13.0 (devel)" "(s20221226-516-g615a01c6c)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "/usr/local/lib/ivl/system.vpi";
+:vpi_module "/usr/local/lib/ivl/vhdl_sys.vpi";
+:vpi_module "/usr/local/lib/ivl/vhdl_textio.vpi";
+:vpi_module "/usr/local/lib/ivl/v2005_math.vpi";
+:vpi_module "/usr/local/lib/ivl/va_math.vpi";
+S_0x559a05fcc4e0 .scope module, "test" "test" 2 54;
+ .timescale 0 0;
+v0x559a05fe1bb0_0 .var "bitmask", 19 0;
+v0x559a05fe1c70_0 .var "clk", 0 0;
+v0x559a05fe1d40_0 .var/i "currTime", 31 0;
+S_0x559a05fcc670 .scope module, "little_cache" "cache_decider" 2 70, 2 1 0, S_0x559a05fcc4e0;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "clk";
+    .port_info 1 /INPUT 20 "bit_mask";
+P_0x559a05fcc850 .param/l "non" 0 2 2, +C4<00000000000000000000000000000001>;
+v0x559a05fb9710 .array "availables", 0 3, 4 0;
+v0x559a05fb97b0_0 .net "bit_mask", 19 0, v0x559a05fe1bb0_0;  1 drivers
+v0x559a05fe1870_0 .net "clk", 0 0, v0x559a05fe1c70_0;  1 drivers
+v0x559a05fe1940_0 .var/i "i", 31 0;
+v0x559a05fe1a20_0 .var/i "j", 31 0;
+E_0x559a05fc8a90 .event posedge, v0x559a05fe1870_0;
+    .scope S_0x559a05fcc670;
+T_0 ;
+    %pushi/vec4 0, 0, 32;
+    %store/vec4 v0x559a05fe1940_0, 0, 32;
+T_0.0 ; Top of for-loop
+    %load/vec4 v0x559a05fe1940_0;
+    %cmpi/s 4, 0, 32;
+    %jmp/0xz T_0.1, 5;
+    %pushi/vec4 0, 0, 5;
+    %ix/getv/s 4, v0x559a05fe1940_0;
+    %store/vec4a v0x559a05fb9710, 4, 0;
+T_0.2 ; for-loop step statement
+    %load/vec4 v0x559a05fe1940_0;
+    %addi 1, 0, 32;
+    %store/vec4 v0x559a05fe1940_0, 0, 32;
+    %jmp T_0.0;
+T_0.1 ; for-loop exit label
+    %end;
+    .thread T_0;
+    .scope S_0x559a05fcc670;
+T_1 ;
+    %wait E_0x559a05fc8a90;
+    %pushi/vec4 0, 0, 32;
+    %store/vec4 v0x559a05fe1a20_0, 0, 32;
+    %pushi/vec4 0, 0, 32;
+    %store/vec4 v0x559a05fe1940_0, 0, 32;
+T_1.0 ; Top of for-loop
+    %load/vec4 v0x559a05fe1940_0;
+    %cmpi/s 4, 0, 32;
+    %jmp/0xz T_1.1, 5;
+    %pushi/vec4 31, 0, 5;
+    %ix/getv/s 4, v0x559a05fe1940_0;
+    %store/vec4a v0x559a05fb9710, 4, 0;
+T_1.2 ; for-loop step statement
+    %load/vec4 v0x559a05fe1940_0;
+    %addi 1, 0, 32;
+    %store/vec4 v0x559a05fe1940_0, 0, 32;
+    %jmp T_1.0;
+T_1.1 ; for-loop exit label
+    %pushi/vec4 0, 0, 32;
+    %store/vec4 v0x559a05fe1940_0, 0, 32;
+T_1.3 ; Top of for-loop
+    %load/vec4 v0x559a05fe1940_0;
+    %cmpi/s 20, 0, 32;
+    %jmp/0xz T_1.4, 5;
+    %load/vec4 v0x559a05fb97b0_0;
+    %load/vec4 v0x559a05fe1940_0;
+    %part/s 1;
+    %pad/u 32;
+    %cmpi/e 1, 0, 32;
+    %jmp/0xz  T_1.6, 4;
+    %load/vec4 v0x559a05fe1940_0;
+    %pad/s 5;
+    %ix/getv/s 4, v0x559a05fe1a20_0;
+    %store/vec4a v0x559a05fb9710, 4, 0;
+    %load/vec4 v0x559a05fe1a20_0;
+    %addi 1, 0, 32;
+    %store/vec4 v0x559a05fe1a20_0, 0, 32;
+T_1.6 ;
+T_1.5 ; for-loop step statement
+    %load/vec4 v0x559a05fe1940_0;
+    %addi 1, 0, 32;
+    %store/vec4 v0x559a05fe1940_0, 0, 32;
+    %jmp T_1.3;
+T_1.4 ; for-loop exit label
+    %jmp T_1;
+    .thread T_1;
+    .scope S_0x559a05fcc4e0;
+T_2 ;
+    %pushi/vec4 0, 0, 32;
+    %store/vec4 v0x559a05fe1d40_0, 0, 32;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x559a05fe1c70_0, 0, 1;
+    %pushi/vec4 0, 0, 20;
+    %store/vec4 v0x559a05fe1bb0_0, 0, 20;
+    %end;
+    .thread T_2;
+    .scope S_0x559a05fcc4e0;
+T_3 ;
+    %delay 0, 0;
+    %delay 2, 0;
+    %pushi/vec4 12, 0, 20;
+    %store/vec4 v0x559a05fe1bb0_0, 0, 20;
+    %delay 2, 0;
+    %vpi_call 2 79 "$finish" {0 0 0};
+    %end;
+    .thread T_3;
+    .scope S_0x559a05fcc4e0;
+T_4 ;
+    %delay 2, 0;
+    %load/vec4 v0x559a05fe1d40_0;
+    %addi 1, 0, 32;
+    %store/vec4 v0x559a05fe1d40_0, 0, 32;
+    %vpi_call 2 84 "$display", " " {0 0 0};
+    %jmp T_4;
+    .thread T_4;
+    .scope S_0x559a05fcc4e0;
+T_5 ;
+    %delay 1, 0;
+    %load/vec4 v0x559a05fe1c70_0;
+    %inv;
+    %store/vec4 v0x559a05fe1c70_0, 0, 1;
+    %vpi_call 2 89 "$display", "Time: %d, clk: %d, ava_0: %d, ava_1: %d, ava_2: %d, ava_3: %d", v0x559a05fe1d40_0, v0x559a05fe1c70_0, &A<v0x559a05fb9710, 0>, &A<v0x559a05fb9710, 1>, &A<v0x559a05fb9710, 2>, &A<v0x559a05fb9710, 3> {0 0 0};
+    %jmp T_5;
+    .thread T_5;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "cache_decider.v";

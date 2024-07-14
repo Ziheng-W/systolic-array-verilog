@@ -1,4 +1,4 @@
-module single_PE_rounded #(
+module sparse_PE_rounded #(
   parameter DATA_WIDTH = 8, 
   parameter Half_WIDTH = 4,
   parameter INDEX_SIZE = 3 // 8*8 PE

@@ -4,6 +4,7 @@
 # include <stdlib.h>
 # include <vector>
 # include <algorithm>
+#include <iomanip>
 #include <cstdlib>
 
 using namespace std;
@@ -13,7 +14,9 @@ int max_stack_size_1(int vector_size, float p1, float p2);
 int max_stack_size_2(int vector_size, float p1, float p2);
 int max_stack_size_4(int vector_size, float p1, float p2);
 int max_stack_size_8(int vector_size, float p1, float p2);
-float monte_carlo(int vector_size, float p1, float p2, int times = 1000);
+int max_stack_size_4_1_static_1(int vector_size, float p);
+
+float monte_carlo(int vector_size, float p1, float p2, int times = 10000000);
 
 int main(int argc, char *argv[]){
   srand((unsigned)time(NULL));
@@ -21,12 +24,12 @@ int main(int argc, char *argv[]){
   int size = atoi(argv[1]);
   float p1 = atof(argv[2]);
   float p2 = atof(argv[3]);
-  cout<<size<<" "<<p1<<" "<<p2<<", 1000 times for each"<<endl;
+  cout<<size<<" "<<p1<<" "<<p2<<", 10000000 times for each"<<endl;
   cout<<"Results: "<<endl;
-  for(int j=0; j<5; j++){
+  for(int j=0; j<8; j++){
     cout<<"      ";
-    for (int i=0; i<10; i++){
-      cout<<monte_carlo(size,p1,p2)<<", ";
+    for (int i=0; i<1; i++){
+      cout<<  std::setw(6)<<std::setfill(' ')  <<monte_carlo(size,p1,p2)<<", ";
     } cout<<endl;
   } cout<<endl;
   
@@ -51,18 +54,33 @@ int max_stack_size_1(int vector_size, float p1, float p2){
     if (randint(p2)) {v2.push_back(i); on_2 = true;}
     if (on_1 && on_2) v_match.push_back(i);  
   }
-  for (int i=0; i<v1.size(); i++){ //test output for generated vectors
-    cout<<v1[i]<<" ";
-  } cout<<endl; 
-  for (int i=0; i<v2.size(); i++){
-    cout<<v2[i]<<" ";
-  } cout<<endl;
-  for (int i=0; i<v_match.size(); i++){
-    cout<<v_match[i]<<" ";
-  } cout<<endl;
-
 /* simulate how pe takes in those 2 vectors */
-  int max_length = max(v1.size(), v2.size());
+  int max_length;
+  int delta = abs((int)(v1.size() - v2.size()));
+  if(v1.size() > v2.size()){
+    max_length = v1.size();
+    for(int i=0; i<delta; i++)
+      v2.push_back(999);
+  }else{
+    max_length = v2.size();
+    for(int i=0; i<delta; i++)
+      v1.push_back(999);
+  }
+
+  // cout<<"v1: (size "<<v1.size()<<")";//test output for generated vectors
+  // for (int i=0; i<v1.size(); i++){ 
+  //   cout<<std::setw(3)<<std::setfill(' ')<<v1[i]<<" ";
+  // } cout<<endl; 
+  // cout<<"v2: (size "<<v2.size()<<")";
+  // for (int i=0; i<v2.size(); i++){
+  //   cout<<std::setw(3)<<std::setfill(' ')<<v2[i]<<" ";
+  // } cout<<endl;
+  // cout<<"v_m: ";
+  // for (int i=0; i<v_match.size(); i++){
+  //   cout<<std::setw(3)<<std::setfill(' ')<<v_match[i]<<" ";
+  // } cout<<endl;
+
+
   int max_stack_size{};
   int current_stack_size{};
   vector<int> local_stack{};
@@ -85,6 +103,7 @@ int max_stack_size_1(int vector_size, float p1, float p2){
     }
     // 此时栈经过一番增减，更新一次最大值
     max_stack_size = max(max_stack_size, current_stack_size);
+    // cout<<current_stack_size<<", ";
   }
 
   return max_stack_size;
@@ -115,6 +134,14 @@ int max_stack_size_2(int vector_size, float p1, float p2){
   int max_stack_size{};
   int current_stack_size_1{};
   int current_stack_size_2{};
+  for(int i = 0; i< max_length - (int)v1_1.size(); i++)
+    v1_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v1_2.size(); i++)
+    v1_2.push_back(999);
+  for(int i = 0; i< max_length - (int)v2_1.size(); i++)
+    v2_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v2_2.size(); i++)
+    v2_2.push_back(999);
 
   vector<int> local_stack{};
   for (int i=0; i<max_length; i++) {
@@ -187,6 +214,22 @@ int max_stack_size_4(int vector_size, float p1, float p2){
   int current_stack_size_2{};
   int current_stack_size_3{};
   int current_stack_size_4{};
+  for(int i = 0; i< max_length - (int)v1_1.size(); i++)
+    v1_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v1_2.size(); i++)
+    v1_2.push_back(999);
+  for(int i = 0; i< max_length - (int)v2_1.size(); i++)
+    v2_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v2_2.size(); i++)
+    v2_2.push_back(999);
+  for(int i = 0; i< max_length - (int)v3_1.size(); i++)
+    v3_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v3_2.size(); i++)
+    v3_2.push_back(999);
+  for(int i = 0; i< max_length - (int)v4_1.size(); i++)
+    v4_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v4_2.size(); i++)
+    v4_2.push_back(999);
 
   for (int i=0; i<max_length; i++) {
     if (v1_1[i] != v1_2[i]) {
@@ -311,6 +354,39 @@ int max_stack_size_8(int vector_size, float p1, float p2){
   int current_stack_size_6{};
   int current_stack_size_7{};
   int current_stack_size_8{};
+  for(int i = 0; i< max_length - (int)v1_1.size(); i++)
+    v1_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v1_2.size(); i++)
+    v1_2.push_back(999);
+  for(int i = 0; i< max_length - (int)v2_1.size(); i++)
+    v2_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v2_2.size(); i++)
+    v2_2.push_back(999);
+  for(int i = 0; i< max_length - (int)v3_1.size(); i++)
+    v3_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v3_2.size(); i++)
+    v3_2.push_back(999);
+  for(int i = 0; i< max_length - (int)v4_1.size(); i++)
+    v4_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v4_2.size(); i++)
+    v4_2.push_back(999);
+  
+  for(int i = 0; i< max_length - (int)v5_1.size(); i++)
+    v5_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v5_2.size(); i++)
+    v5_2.push_back(999);
+  for(int i = 0; i< max_length - (int)v6_1.size(); i++)
+    v6_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v6_2.size(); i++)
+    v6_2.push_back(999);
+  for(int i = 0; i< max_length - (int)v7_1.size(); i++)
+    v7_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v7_2.size(); i++)
+    v7_2.push_back(999);
+  for(int i = 0; i< max_length - (int)v8_1.size(); i++)
+    v8_1.push_back(999);
+  for(int i = 0; i< max_length - (int)v8_2.size(); i++)
+    v8_2.push_back(999);
 
   for (int i=0; i<max_length; i++) {
     if (v1_1[i] != v1_2[i]) { // 1
@@ -404,9 +480,9 @@ float monte_carlo(int vector_size, float p1, float p2, int times){
   float temp_max{};
   for (int i=0; i<times; i++){
     // float temp_result = max_stack_size_1(vector_size, p1, p2);
-    // float temp_result = 0.5*max_stack_size_2(vector_size, p);
-    // float temp_result = 0.25*max_stack_size_4(vector_size, p);
-    float temp_result = 0.125*max_stack_size_8(vector_size, p1,p2);
+    // float temp_result = 0.5*max_stack_size_2(vector_size, p1, p2);
+    // float temp_result = max_stack_size_4(vector_size, p1, p2);
+    float temp_result = max_stack_size_8(vector_size, p1,p2);
     temp_max = max(temp_max, temp_result);
   }
   return temp_max;

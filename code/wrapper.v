@@ -33,7 +33,7 @@ module finish_decider #(
   always @(posedge clk ) begin
     counter <= counter+1;
     counter_tile <= counter + 1 + Half_SIZE;
-    
+
     signal = 0;
     for(i=0; i<ARRAY_SIZE; i=i+1) begin
       bias = ARRAY_SIZE - i + counter;
@@ -44,4 +44,12 @@ module finish_decider #(
       end 
     end  
   end
+endmodule
+
+module multi(
+  input[7:0] a, 
+  input[7:0] b, 
+  output[15:0]c
+  );
+  assign c = a * b;
 endmodule

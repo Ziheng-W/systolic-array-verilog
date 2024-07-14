@@ -72,7 +72,7 @@ module invert #(
   integer i;
   always @ (in) for (i=1; i<=LENGTH; i=i+1)
       out[DATA_WIDTH*i -1 -: DATA_WIDTH] 
-    = in[DATA_WIDTH*(LENGTH-i+1) -1 -: DATA_WIDTH];
+    = in[DATA_WIDTH*(LENGTH-i) -1 -: DATA_WIDTH];
 endmodule
 
 /*---------------------------------- Triangle Register Arrays ----------------------------------*/
@@ -168,7 +168,6 @@ module input_parser_8_8 #(
   wire [4*DATA_WIDTH-1 : 0] wire_tri_3_in;
   wire [4*DATA_WIDTH-1 : 0] wire_tri_3_out;
   wire [4*DATA_WIDTH-1 : 0] wire_tri_3_out_inv;
-  wire [4*DATA_WIDTH-1 : 0] wire_column_out;
 
   triangle_shifter_array_4 #(4, 16) triangle_0 (clk, enable, in_0[4*DATA_WIDTH-1 -: 4*DATA_WIDTH], out_0[4*DATA_WIDTH-1 -: 4*DATA_WIDTH]);
   triangle_shifter_array_4 #(4, 16) triangle_1 (clk, enable, in_0[8*DATA_WIDTH-1 -: 4*DATA_WIDTH], wire_tri_1_out);
@@ -178,9 +177,8 @@ module input_parser_8_8 #(
   mux #(4,16) mux_tri_3_in (tile, wire_tri_2_out_inv, in_1[4*DATA_WIDTH-1 -: 4*DATA_WIDTH], wire_tri_3_in);
   triangle_shifter_array_4 #(4, 16) triangle_3 (clk, enable, wire_tri_3_in, wire_tri_3_out);
   invert #(4,16) invert_3_out (wire_tri_3_out, wire_tri_3_out_inv);
-  column_shifter #(4,16) column_shift (clk, enable, wire_tri_3_out_inv, wire_column_out); 
+  column_shifter #(4,16) column_shift (clk, enable, wire_tri_3_out_inv, out_0[8*DATA_WIDTH-1 -: 4*DATA_WIDTH]);
   assign out_1[4*DATA_WIDTH-1 -: 4*DATA_WIDTH] = wire_tri_3_out;
   assign out_1[8*DATA_WIDTH-1 -: 4*DATA_WIDTH] = wire_tri_2_out;
-  mux #(4,16) mux_out0_high4 (tile, wire_column_out, wire_tri_2_out, out_0[8*DATA_WIDTH-1 -: 4*DATA_WIDTH]);
   
 endmodule
