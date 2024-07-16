@@ -93,59 +93,59 @@ module triangle_shifter_array_4 #(
   shifter #(3, DATA_WIDTH) shifter3 (clk, enable, in[DATA_WIDTH*4-1 -: DATA_WIDTH], out[DATA_WIDTH*4-1 -: DATA_WIDTH]);
 endmodule
 
-// 给 8*8 PE阵列用的移位寄存器阵列，给每个向量制造 0 1 2 3 4 5 6 7 拍的延迟
-module triangle_shifter_array_8 #(
-  parameter HIGHT = 8,
-  parameter DATA_WIDTH = 16 
-) (
-  input clk,
-  input enable,
-  input [DATA_WIDTH*HIGHT-1 : 0] in,
-  output [DATA_WIDTH*HIGHT-1 : 0] out
-);
-  //
-  assign out[DATA_WIDTH-1 -: DATA_WIDTH] = in[DATA_WIDTH-1 -: DATA_WIDTH];
-  shifter #(1, DATA_WIDTH) shifter1 (clk, enable, in[DATA_WIDTH*2-1 -: DATA_WIDTH], out[DATA_WIDTH*2-1 -: DATA_WIDTH]);
-  shifter #(2, DATA_WIDTH) shifter2 (clk, enable, in[DATA_WIDTH*3-1 -: DATA_WIDTH], out[DATA_WIDTH*3-1 -: DATA_WIDTH]);
-  shifter #(3, DATA_WIDTH) shifter3 (clk, enable, in[DATA_WIDTH*4-1 -: DATA_WIDTH], out[DATA_WIDTH*4-1 -: DATA_WIDTH]);
-  //
-  shifter #(4, DATA_WIDTH) shifter4 (clk, enable, in[DATA_WIDTH*5-1 -: DATA_WIDTH], out[DATA_WIDTH*5-1 -: DATA_WIDTH]);
-  shifter #(5, DATA_WIDTH) shifter5 (clk, enable, in[DATA_WIDTH*6-1 -: DATA_WIDTH], out[DATA_WIDTH*6-1 -: DATA_WIDTH]);
-  shifter #(6, DATA_WIDTH) shifter6 (clk, enable, in[DATA_WIDTH*7-1 -: DATA_WIDTH], out[DATA_WIDTH*7-1 -: DATA_WIDTH]);
-  shifter #(7, DATA_WIDTH) shifter7 (clk, enable, in[DATA_WIDTH*8-1 -: DATA_WIDTH], out[DATA_WIDTH*8-1 -: DATA_WIDTH]);
-endmodule
+// // 给 8*8 PE阵列用的移位寄存器阵列，给每个向量制造 0 1 2 3 4 5 6 7 拍的延迟
+// module triangle_shifter_array_8 #(
+//   parameter HIGHT = 8,
+//   parameter DATA_WIDTH = 16 
+// ) (
+//   input clk,
+//   input enable,
+//   input [DATA_WIDTH*HIGHT-1 : 0] in,
+//   output [DATA_WIDTH*HIGHT-1 : 0] out
+// );
+//   //
+//   assign out[DATA_WIDTH-1 -: DATA_WIDTH] = in[DATA_WIDTH-1 -: DATA_WIDTH];
+//   shifter #(1, DATA_WIDTH) shifter1 (clk, enable, in[DATA_WIDTH*2-1 -: DATA_WIDTH], out[DATA_WIDTH*2-1 -: DATA_WIDTH]);
+//   shifter #(2, DATA_WIDTH) shifter2 (clk, enable, in[DATA_WIDTH*3-1 -: DATA_WIDTH], out[DATA_WIDTH*3-1 -: DATA_WIDTH]);
+//   shifter #(3, DATA_WIDTH) shifter3 (clk, enable, in[DATA_WIDTH*4-1 -: DATA_WIDTH], out[DATA_WIDTH*4-1 -: DATA_WIDTH]);
+//   //
+//   shifter #(4, DATA_WIDTH) shifter4 (clk, enable, in[DATA_WIDTH*5-1 -: DATA_WIDTH], out[DATA_WIDTH*5-1 -: DATA_WIDTH]);
+//   shifter #(5, DATA_WIDTH) shifter5 (clk, enable, in[DATA_WIDTH*6-1 -: DATA_WIDTH], out[DATA_WIDTH*6-1 -: DATA_WIDTH]);
+//   shifter #(6, DATA_WIDTH) shifter6 (clk, enable, in[DATA_WIDTH*7-1 -: DATA_WIDTH], out[DATA_WIDTH*7-1 -: DATA_WIDTH]);
+//   shifter #(7, DATA_WIDTH) shifter7 (clk, enable, in[DATA_WIDTH*8-1 -: DATA_WIDTH], out[DATA_WIDTH*8-1 -: DATA_WIDTH]);
+// endmodule
 
-// 给 16*16 PE阵列用的移位寄存器阵列
-module triangle_shifter_array_16 #(
-  parameter HIGHT = 16,
-  parameter DATA_WIDTH = 16 
-) (
-  input clk,
-  input enable,
-  input [DATA_WIDTH*HIGHT-1 : 0] in,
-  output [DATA_WIDTH*HIGHT-1 : 0] out
-);
-  //
-  assign out[DATA_WIDTH-1 -: DATA_WIDTH] = in[DATA_WIDTH-1 -: DATA_WIDTH];
-  shifter #(1, DATA_WIDTH) shifter1 (clk, enable, in[DATA_WIDTH*2-1 -: DATA_WIDTH], out[DATA_WIDTH*2-1 -: DATA_WIDTH]);
-  shifter #(2, DATA_WIDTH) shifter2 (clk, enable, in[DATA_WIDTH*3-1 -: DATA_WIDTH], out[DATA_WIDTH*3-1 -: DATA_WIDTH]);
-  shifter #(3, DATA_WIDTH) shifter3 (clk, enable, in[DATA_WIDTH*4-1 -: DATA_WIDTH], out[DATA_WIDTH*4-1 -: DATA_WIDTH]);
-  //
-  shifter #(4, DATA_WIDTH) shifter4 (clk, enable, in[DATA_WIDTH*5-1 -: DATA_WIDTH], out[DATA_WIDTH*5-1 -: DATA_WIDTH]);
-  shifter #(5, DATA_WIDTH) shifter5 (clk, enable, in[DATA_WIDTH*6-1 -: DATA_WIDTH], out[DATA_WIDTH*6-1 -: DATA_WIDTH]);
-  shifter #(6, DATA_WIDTH) shifter6 (clk, enable, in[DATA_WIDTH*7-1 -: DATA_WIDTH], out[DATA_WIDTH*7-1 -: DATA_WIDTH]);
-  shifter #(7, DATA_WIDTH) shifter7 (clk, enable, in[DATA_WIDTH*8-1 -: DATA_WIDTH], out[DATA_WIDTH*8-1 -: DATA_WIDTH]);
-  //
-  shifter #(8, DATA_WIDTH) shifter8 (clk, enable, in[DATA_WIDTH*9-1 -: DATA_WIDTH], out[DATA_WIDTH*9-1 -: DATA_WIDTH]);
-  shifter #(9, DATA_WIDTH) shifter9 (clk, enable, in[DATA_WIDTH*10-1 -: DATA_WIDTH], out[DATA_WIDTH*10-1 -: DATA_WIDTH]);
-  shifter #(10, DATA_WIDTH) shifter10 (clk, enable, in[DATA_WIDTH*11-1 -: DATA_WIDTH], out[DATA_WIDTH*11-1 -: DATA_WIDTH]);
-  shifter #(11, DATA_WIDTH) shifter11 (clk, enable, in[DATA_WIDTH*12-1 -: DATA_WIDTH], out[DATA_WIDTH*12-1 -: DATA_WIDTH]);
-  //
-  shifter #(12, DATA_WIDTH) shifter12 (clk, enable, in[DATA_WIDTH*13-1 -: DATA_WIDTH], out[DATA_WIDTH*13-1 -: DATA_WIDTH]);
-  shifter #(13, DATA_WIDTH) shifter13 (clk, enable, in[DATA_WIDTH*14-1 -: DATA_WIDTH], out[DATA_WIDTH*14-1 -: DATA_WIDTH]);
-  shifter #(14, DATA_WIDTH) shifter14 (clk, enable, in[DATA_WIDTH*15-1 -: DATA_WIDTH], out[DATA_WIDTH*15-1 -: DATA_WIDTH]);
-  shifter #(15, DATA_WIDTH) shifter15 (clk, enable, in[DATA_WIDTH*16-1 -: DATA_WIDTH], out[DATA_WIDTH*16-1 -: DATA_WIDTH]);
-endmodule
+// // 给 16*16 PE阵列用的移位寄存器阵列
+// module triangle_shifter_array_16 #(
+//   parameter HIGHT = 16,
+//   parameter DATA_WIDTH = 16 
+// ) (
+//   input clk,
+//   input enable,
+//   input [DATA_WIDTH*HIGHT-1 : 0] in,
+//   output [DATA_WIDTH*HIGHT-1 : 0] out
+// );
+//   //
+//   assign out[DATA_WIDTH-1 -: DATA_WIDTH] = in[DATA_WIDTH-1 -: DATA_WIDTH];
+//   shifter #(1, DATA_WIDTH) shifter1 (clk, enable, in[DATA_WIDTH*2-1 -: DATA_WIDTH], out[DATA_WIDTH*2-1 -: DATA_WIDTH]);
+//   shifter #(2, DATA_WIDTH) shifter2 (clk, enable, in[DATA_WIDTH*3-1 -: DATA_WIDTH], out[DATA_WIDTH*3-1 -: DATA_WIDTH]);
+//   shifter #(3, DATA_WIDTH) shifter3 (clk, enable, in[DATA_WIDTH*4-1 -: DATA_WIDTH], out[DATA_WIDTH*4-1 -: DATA_WIDTH]);
+//   //
+//   shifter #(4, DATA_WIDTH) shifter4 (clk, enable, in[DATA_WIDTH*5-1 -: DATA_WIDTH], out[DATA_WIDTH*5-1 -: DATA_WIDTH]);
+//   shifter #(5, DATA_WIDTH) shifter5 (clk, enable, in[DATA_WIDTH*6-1 -: DATA_WIDTH], out[DATA_WIDTH*6-1 -: DATA_WIDTH]);
+//   shifter #(6, DATA_WIDTH) shifter6 (clk, enable, in[DATA_WIDTH*7-1 -: DATA_WIDTH], out[DATA_WIDTH*7-1 -: DATA_WIDTH]);
+//   shifter #(7, DATA_WIDTH) shifter7 (clk, enable, in[DATA_WIDTH*8-1 -: DATA_WIDTH], out[DATA_WIDTH*8-1 -: DATA_WIDTH]);
+//   //
+//   shifter #(8, DATA_WIDTH) shifter8 (clk, enable, in[DATA_WIDTH*9-1 -: DATA_WIDTH], out[DATA_WIDTH*9-1 -: DATA_WIDTH]);
+//   shifter #(9, DATA_WIDTH) shifter9 (clk, enable, in[DATA_WIDTH*10-1 -: DATA_WIDTH], out[DATA_WIDTH*10-1 -: DATA_WIDTH]);
+//   shifter #(10, DATA_WIDTH) shifter10 (clk, enable, in[DATA_WIDTH*11-1 -: DATA_WIDTH], out[DATA_WIDTH*11-1 -: DATA_WIDTH]);
+//   shifter #(11, DATA_WIDTH) shifter11 (clk, enable, in[DATA_WIDTH*12-1 -: DATA_WIDTH], out[DATA_WIDTH*12-1 -: DATA_WIDTH]);
+//   //
+//   shifter #(12, DATA_WIDTH) shifter12 (clk, enable, in[DATA_WIDTH*13-1 -: DATA_WIDTH], out[DATA_WIDTH*13-1 -: DATA_WIDTH]);
+//   shifter #(13, DATA_WIDTH) shifter13 (clk, enable, in[DATA_WIDTH*14-1 -: DATA_WIDTH], out[DATA_WIDTH*14-1 -: DATA_WIDTH]);
+//   shifter #(14, DATA_WIDTH) shifter14 (clk, enable, in[DATA_WIDTH*15-1 -: DATA_WIDTH], out[DATA_WIDTH*15-1 -: DATA_WIDTH]);
+//   shifter #(15, DATA_WIDTH) shifter15 (clk, enable, in[DATA_WIDTH*16-1 -: DATA_WIDTH], out[DATA_WIDTH*16-1 -: DATA_WIDTH]);
+// endmodule
 
 /*-------------------------------- Input parser example ----------------------------------*/
 

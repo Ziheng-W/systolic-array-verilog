@@ -3,14 +3,17 @@
 
 using namespace std;
 
-// #define USE_ARRAY
-
+// 一些常用的字符串
 const string my_name = "[PE Array Generater]: ";
 const string comment = "// ";
 const string BIT_WIDTH = "BIT_WIDTH";
 const string SIZE = "SIZE";
 const string SINGLE_PE_ROUNDED = "single_PE_rounded";
+const string WIRE = "wire ";
+const string TAB = "  ";
+const string INPUT = "input ";
 
+// 用函数生成带编号的实例名
 string finish(int i, int j){return (string)__func__+"_"+to_string(i)+"_"+to_string(j);}
 string input_up(int i){return (string)__func__+"_"+to_string(i);}
 string input_left(int i){return (string)__func__+"_"+to_string(i);}
@@ -20,8 +23,19 @@ string output(int i, int j){return (string)__func__+"_"+to_string(i)+"_"+to_stri
 string inner_a(int i, int j){return (string)__func__+"_"+to_string(i)+"_"+to_string(j);}
 string inner_b(int i, int j){return (string)__func__+"_"+to_string(i)+"_"+to_string(j);}
 string pe(int i, int j){return (string)__func__+"_"+to_string(i)+"_"+to_string(j);}
+string range(int i){return (string)"[" + to_string(i-1) + ":0] ";}
+string finish_decider(){return (string)__func__;}
+string finish_decider(int i){return (string)__func__ + "_" + to_string(i);}
+string finish(int i, int j, int size)
+{return (string)__func__+"["+to_string(size*size - size*(i-1) - j)+"]";}
 
+// 复制文件。生成verilog代码不依赖头文件，所有子模块放在同一个文件里
+void dump_file(string s, fstream & f);
+// 生成一个面积为size*size，位宽为bitwidth的普通PE阵列
+void make_array(fstream &o_f, int size, int bit_width);
+void make_wrapper(fstream &o_f, int size, int bit_width);
   
+
 int main(int argc, char* argv[]){
   /** 读取命令行参数 **/
   if(argc > 4){
@@ -37,12 +51,28 @@ int main(int argc, char* argv[]){
   fstream o_f;
   o_f.open(o_f_name, ios::out);
   o_f<<comment<<my_name<<"size: "<<size<<", bit width:"<<bit_width<<endl<<endl;  
-  ifstream input("single_pe.v");
+  
+  dump_file("source_single_pe.v", o_f);
+  dump_file("source_output_decider.v", o_f);
+  make_array(o_f, size, bit_width);
+  make_wrapper(o_f, size, bit_width);
+  
+  o_f.close();
+  return 0;
+}
+
+
+
+void dump_file(string s, fstream & f){
+  ifstream input(s);
   string line;
   while (getline(input,line)){
-    o_f<<line<<"\n";
-  } o_f<<endl;
+    f<<line<<"\n";
+  } f<<endl;
+}
 
+
+void make_array(fstream &o_f, int size, int bit_width){
   /** module：普通pe阵列 **/
   o_f<<"module PE_Array_"<<size<<"_"<<size<<"_"<<bit_width<<" #("<<endl;
   /** parameter **/
@@ -50,8 +80,6 @@ int main(int argc, char* argv[]){
   o_f<<"  parameter "<<SIZE<<" = "<<size<<endl;
   o_f<<")("<<endl;
   /** IO port **/
-  o_f<<"  input clk,"<<endl;
-#ifndef USE_ARRAY
   // finish信号
   o_f<<comment<<"finish 信号"<<endl;
   for(int i=size; i>=1; i--){
@@ -82,14 +110,8 @@ int main(int argc, char* argv[]){
       o_f<<"  output ["<<BIT_WIDTH<<"-1:0] "<<output(i,j)<<",";
     } o_f<<endl;
   }
-  o_f<<"  output dot"<<endl;
-#else
-  o_f<<"  input ["<<SIZE<<"*"<<SIZE<<"-1:0] finish,"<<endl;
-  o_f<<"  input ["<<SIZE<<"*"<<BIT_WIDTH<<"-1:0] input_up,"<<endl;
-  o_f<<"  input ["<<SIZE<<"*"<<BIT_WIDTH<<"-1:0] input_left,"<<endl;
-  o_f<<"  output ["<<SIZE<<"*"<<BIT_WIDTH<<"-1:0] pass_right,"<<endl;
-  o_f<<"  output ["<<SIZE<<"*"<<BIT_WIDTH<<"-1:0] pass_down"<<endl;
-#endif
+  o_f<<endl;
+  o_f<<"  input clk"<<endl;
   o_f<<");"<<endl;
   /** content **/
   /** wires **/
@@ -120,20 +142,90 @@ int main(int argc, char* argv[]){
          // pass_down
          <<( (i==1)    ? pass_down(j)  : inner_b(i,j)   )<<", "   
          // pass_right
-         <<( (j==1)    ? pass_right(i) : inner_a(i,j)   )<<", "   
-         <<output(i,j)<<");"                              // output
+         <<( (j==1)    ? pass_right(i) : inner_a(i,j)   )<<", "
+         // output   
+         <<output(i,j)<<");"                              
          <<endl;
     }
   }
-  o_f<<endl;
-  o_f<<endl;
-  o_f<<endl;
-  o_f<<"endmodule"<<endl;
-  o_f.close();
-  return 0;
+  o_f<<"endmodule"<<endl<<endl;
 }
 
+void make_wrapper(fstream &o_f, int size, int bit_width) {
+  /** module：普通pe阵列 **/
+  o_f<<"module wrapper_"<<size<<"_"<<size<<"_"<<bit_width<<" #("<<endl;
+  /** parameter **/
+  o_f<<"  parameter "<<BIT_WIDTH<<" = "<<bit_width<<","<<endl;
+  o_f<<"  parameter "<<SIZE<<" = "<<size<<endl;
+  o_f<<")("<<endl;
+   /** IO port **/
+  // 两个方向的 input
+  o_f<<comment<<"两个方向的 input"<<endl;
+  for (int i=size; i>=1; i--){
+    o_f<<"  input ["<<BIT_WIDTH<<"-1:0] "<<input_up(i)<<",";
+  } o_f<<endl;
+  for (int i=size; i>=1; i--){
+    o_f<<"  input ["<<BIT_WIDTH<<"-1:0] "<<input_left(i)<<",";
+  } o_f<<endl;
+  // 两个方向的 output
+  o_f<<comment<<"两个方向的 pass"<<endl;
+  for (int i=size; i>=1; i--){
+    o_f<<"  output ["<<BIT_WIDTH<<"-1:0] "<<pass_down(i)<<",";
+  } o_f<<endl;
+  for (int i=size; i>=1; i--){
+    o_f<<"  output ["<<BIT_WIDTH<<"-1:0] "<<pass_right(i)<<",";
+  } o_f<<endl;
+  // output
+  o_f<<comment<<"结果输出"<<endl;
+  for(int i=size; i>=1; i--){
+    for(int j=size; j>=1; j--){
+      o_f<<"  output ["<<BIT_WIDTH<<"-1:0] "<<output(i,j)<<",";
+    } o_f<<endl;
+  }
+  // tile
+  o_f<<"  input tile,"<<endl;
+  o_f<<"  input clk"<<endl;
+  o_f<<");"<<endl;
+
+  /** content **/
+  // 实例化output decider
+  o_f<<TAB<<comment<<"实例化output decider"<<endl;
+  o_f<<TAB<<WIRE<<range(size*size)<<"finish;"<<endl;
+  o_f<<TAB<<finish_decider()<<" #("<<size<<", "<<(int)size/2<<") "
+     <<finish_decider(0)<<" ("<<"clk, tile, finish"<<");"<<endl;
+  // 实例化纯阵列
+  o_f<<TAB<<comment<<"实例化纯阵列"<<endl;
+  o_f<<TAB<<"PE_Array_"<<size<<"_"<<size<<"_"<<bit_width<<" #("
+     <<bit_width<<","<<size<<") array ("<<endl;
+  for (int i=size; i>=1; i--){
+    for (int j=size; j>=1; j--){
+      o_f<<TAB<<TAB<<finish(i,j,size)<<",";
+    }o_f<<endl;
+  }
+  o_f<<TAB<<TAB<<comment<<"两个方向的 input"<<endl;
+  for (int i=size; i>=1; i--){
+    o_f<<TAB<<TAB<<input_up(i)<<",";
+  } o_f<<endl;
+  for (int i=size; i>=1; i--){
+    o_f<<TAB<<TAB<<input_left(i)<<",";
+  } o_f<<endl;
+  o_f<<TAB<<TAB<<comment<<"两个方向的 pass"<<endl;
+  for (int i=size; i>=1; i--){
+    o_f<<TAB<<TAB<<pass_down(i)<<",";
+  } o_f<<endl;
+  for (int i=size; i>=1; i--){
+    o_f<<TAB<<TAB<<pass_right(i)<<",";
+  } o_f<<endl;
+   // output
+  o_f<<TAB<<TAB<<comment<<"结果输出"<<endl;
+  for(int i=size; i>=1; i--){
+    for(int j=size; j>=1; j--){
+      o_f<<TAB<<TAB<<output(i,j)<<",";
+    } o_f<<endl;
+  }
+  o_f<<TAB<<TAB<<"clk"<<endl;
+  o_f<<TAB<<TAB<<");"<<endl;
 
 
-
-
+  o_f<<"endmodule"<<endl;
+}
