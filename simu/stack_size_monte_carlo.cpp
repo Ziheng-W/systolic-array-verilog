@@ -18,21 +18,26 @@ int max_stack_size_4_1_static_1(int vector_size, float p);
 
 float monte_carlo(int vector_size, float p1, float p2, int times = 10000000);
 
+// 变量：体积，p1，p2，次数
 int main(int argc, char *argv[]){
-  srand((unsigned)time(NULL));
+  if(argc != 5){
+    cout<<"wrong input"<<endl;
+    return -1;
+  }
 
+  srand((unsigned)time(NULL));
   int size = atoi(argv[1]);
   float p1 = atof(argv[2]);
   float p2 = atof(argv[3]);
-  cout<<size<<" "<<p1<<" "<<p2<<", 10000000 times for each"<<endl;
+  int times = atof(argv[4]);
+  cout<<size<<" "<<p1<<" "<<p2<<", "<<times<<" times for each"<<endl;
   cout<<"Results: "<<endl;
   for(int j=0; j<8; j++){
     cout<<"      ";
     for (int i=0; i<1; i++){
-      cout<<  std::setw(6)<<std::setfill(' ')  <<monte_carlo(size,p1,p2)<<", ";
+      cout<<  std::setw(6)<<std::setfill(' ')<<monte_carlo(size, p1, p2, times)<<", ";
     } cout<<endl;
   } cout<<endl;
-  
   return 0;
 }
 
@@ -485,7 +490,7 @@ float monte_carlo(int vector_size, float p1, float p2, int times){
     float temp_result = max_stack_size_8(vector_size, p1,p2);
     temp_max = max(temp_max, temp_result);
   }
-  return temp_max;
+  return temp_max/8;
 }
 
 // 0.1 4   0.2

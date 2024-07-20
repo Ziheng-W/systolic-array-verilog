@@ -31,10 +31,13 @@ string finish(int i, int j, int size)
 
 // 复制文件。生成verilog代码不依赖头文件，所有子模块放在同一个文件里
 void dump_file(string s, fstream & f);
+// 插入大注释 
+void large_comment(string s, fstream & f);
+
 // 生成一个面积为size*size，位宽为bitwidth的普通PE阵列
 void make_array(fstream &o_f, int size, int bit_width);
-void make_wrapper(fstream &o_f, int size, int bit_width);
-  
+void make_top(fstream &o_f, int size, int bit_width);
+void make_input(fstream &o_f, int size, int tile_size, int bit_width);  
 
 int main(int argc, char* argv[]){
   /** 读取命令行参数 **/
@@ -51,11 +54,26 @@ int main(int argc, char* argv[]){
   fstream o_f;
   o_f.open(o_f_name, ios::out);
   o_f<<comment<<my_name<<"size: "<<size<<", bit width:"<<bit_width<<endl<<endl;  
-  
-  dump_file("source_single_pe.v", o_f);
-  dump_file("source_output_decider.v", o_f);
-  make_array(o_f, size, bit_width);
-  make_wrapper(o_f, size, bit_width);
+
+  // large_comment("[Part 1]: 纯阵列", o_f);
+  // dump_file("./source/single_pe.v", o_f);
+  // make_array(o_f, size, bit_width);
+  // large_comment("[Part 1] Over: 纯阵列生成完毕", o_f);
+
+  // large_comment("[Part 2]: 输入模块生成", o_f);
+  dump_file("./source/input.v", o_f);
+  make_input(o_f, size, 4, bit_width);
+  // large_comment("[Part 2] Over: 输入模块生成完毕", o_f);
+
+
+
+  // large_comment("[Part 3]: 输出模块", o_f);
+  // dump_file("./source/output_decider.v", o_f);
+  // large_comment("[Part 3] Over: 输出模块生成完毕", o_f);
+
+  // large_comment("[Part 4]: 组装接线", o_f);
+  // make_top(o_f, size, bit_width);
+  // large_comment("[Part 4] Over: 组装接线完毕", o_f);
   
   o_f.close();
   return 0;
@@ -70,6 +88,13 @@ void dump_file(string s, fstream & f){
     f<<line<<"\n";
   } f<<endl;
 }
+
+void large_comment(string s, fstream & f){
+  f<<"/**"<<endl;
+  f<<"    "<<s<<endl;
+  f<<"**/"<<endl<<endl;
+}
+
 
 
 void make_array(fstream &o_f, int size, int bit_width){
@@ -151,9 +176,9 @@ void make_array(fstream &o_f, int size, int bit_width){
   o_f<<"endmodule"<<endl<<endl;
 }
 
-void make_wrapper(fstream &o_f, int size, int bit_width) {
+void make_top(fstream &o_f, int size, int bit_width) {
   /** module：普通pe阵列 **/
-  o_f<<"module wrapper_"<<size<<"_"<<size<<"_"<<bit_width<<" #("<<endl;
+  o_f<<"module top_"<<size<<"_"<<size<<"_"<<bit_width<<" #("<<endl;
   /** parameter **/
   o_f<<"  parameter "<<BIT_WIDTH<<" = "<<bit_width<<","<<endl;
   o_f<<"  parameter "<<SIZE<<" = "<<size<<endl;
@@ -228,4 +253,9 @@ void make_wrapper(fstream &o_f, int size, int bit_width) {
 
 
   o_f<<"endmodule"<<endl;
+}
+
+
+void make_input(fstream &o_f, int size, int tile_size, int bit_width){
+
 }
