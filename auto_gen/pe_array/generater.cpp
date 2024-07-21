@@ -38,6 +38,7 @@ void large_comment(string s, fstream & f);
 void make_array(fstream &o_f, int size, int bit_width);
 void make_top(fstream &o_f, int size, int bit_width);
 void make_input(fstream &o_f, int size, int tile_size, int bit_width);  
+void make_sub_array(fstream &o_f, int size, int bit_width);
 
 int main(int argc, char* argv[]){
   /** 读取命令行参数 **/
@@ -56,13 +57,12 @@ int main(int argc, char* argv[]){
   o_f<<comment<<my_name<<"size: "<<size<<", bit width:"<<bit_width<<endl<<endl;  
 
   // large_comment("[Part 1]: 纯阵列", o_f);
-  // dump_file("./source/single_pe.v", o_f);
-  // make_array(o_f, size, bit_width);
+  make_array(o_f, size, bit_width);
   // large_comment("[Part 1] Over: 纯阵列生成完毕", o_f);
 
   // large_comment("[Part 2]: 输入模块生成", o_f);
-  dump_file("./source/input.v", o_f);
-  make_input(o_f, size, 4, bit_width);
+  // dump_file("./source/input.v", o_f);
+  // make_input(o_f, size, 4, bit_width);
   // large_comment("[Part 2] Over: 输入模块生成完毕", o_f);
 
 
@@ -74,6 +74,10 @@ int main(int argc, char* argv[]){
   // large_comment("[Part 4]: 组装接线", o_f);
   // make_top(o_f, size, bit_width);
   // large_comment("[Part 4] Over: 组装接线完毕", o_f);
+
+
+
+  // make_sub_array(o_f, size, bit_width);
   
   o_f.close();
   return 0;
@@ -98,6 +102,7 @@ void large_comment(string s, fstream & f){
 
 
 void make_array(fstream &o_f, int size, int bit_width){
+  dump_file("./source/single_pe.v", o_f);
   /** module：普通pe阵列 **/
   o_f<<"module PE_Array_"<<size<<"_"<<size<<"_"<<bit_width<<" #("<<endl;
   /** parameter **/
@@ -258,4 +263,86 @@ void make_top(fstream &o_f, int size, int bit_width) {
 
 void make_input(fstream &o_f, int size, int tile_size, int bit_width){
 
+}
+
+
+void make_sub_array(fstream &o_f, int size, int bit_width){
+  dump_file("./source/single_pe.v", o_f);
+  /** module：普通pe阵列 **/
+  o_f<<"module PE_Array_"<<size<<"_"<<size<<"_"<<bit_width<<" #("<<endl;
+  /** parameter **/
+  o_f<<"  parameter "<<BIT_WIDTH<<" = "<<bit_width<<","<<endl;
+  o_f<<"  parameter "<<SIZE<<" = "<<size<<endl;
+  o_f<<")("<<endl;
+  /** IO port **/
+  // finish信号
+  o_f<<comment<<"finish 信号"<<endl;
+  for(int i=size; i>=1; i--){
+    for(int j=size; j>=1; j--){
+      o_f<<"  input "<<finish(i,j)<<",";
+    }
+  }
+  // 两个方向的 input
+  o_f<<comment<<"两个方向的 input"<<endl;
+  for (int i=size; i>=1; i--){
+    o_f<<"  input ["<<BIT_WIDTH<<"-1:0] "<<input_up(i)<<",";
+  } 
+  o_f<<endl;
+  for (int i=size; i>=1; i--){
+    o_f<<"  input ["<<BIT_WIDTH<<"-1:0] "<<input_left(i)<<",";
+  } 
+  // 两个方向的 output
+  o_f<<comment<<"两个方向的 pass"<<endl;
+  for (int i=size; i>=1; i--){
+    o_f<<"  output ["<<BIT_WIDTH<<"-1:0] "<<pass_down(i)<<",";
+  }
+  o_f<<endl;
+  for (int i=size; i>=1; i--){
+    o_f<<"  output ["<<BIT_WIDTH<<"-1:0] "<<pass_right(i)<<",";
+  }
+  // output
+  o_f<<comment<<"结果输出"<<endl;
+  for(int i=size; i>=1; i--){
+    for(int j=size; j>=1; j--){
+      o_f<<"  output ["<<BIT_WIDTH<<"-1:0] "<<output(i,j)<<",";
+    }
+  }
+  o_f<<endl;
+  o_f<<"  input clk"<<endl;
+  o_f<<");"<<endl;
+  /** content **/
+  /** wires **/
+  o_f<<comment<<"interconnect a: from left to right"<<endl;
+  for (int i=size; i>=1; i--){
+    for (int j=size; j>=2; j--){
+      o_f<<"  wire ["<<BIT_WIDTH<<"-1:0] "<<inner_a(i,j)<<";";
+    }
+  }
+  o_f<<comment<<"interconnect b: from up to low"<<endl;
+  for (int i=size; i>=2; i--){
+    for (int j=size; j>=1; j--){
+      o_f<<"  wire ["<<BIT_WIDTH<<"-1:0] "<<inner_b(i,j)<<";";
+    }
+  }
+  /** PEs **/
+  o_f<<comment<<"pe"<<endl;
+  for (int i=size; i>=1; i--){
+    for (int j=size; j>=1; j--){
+      o_f<<"  "
+         <<SINGLE_PE_ROUNDED<<" # ("<<bit_width<<", "<<(int)bit_width/2<<") "
+         <<pe(i,j)
+         <<" (clk, "<<finish(i,j)<<", "
+         // input_up
+         <<( (i==size) ? input_up(j)   : inner_b(i+1,j) )<<", "   
+         // input_left
+         <<( (j==size) ? input_left(i) : inner_a(i,j+1) )<<", "   
+         // pass_down
+         <<( (i==1)    ? pass_down(j)  : inner_b(i,j)   )<<", "   
+         // pass_right
+         <<( (j==1)    ? pass_right(i) : inner_a(i,j)   )<<", "
+         // output   
+         <<output(i,j)<<");";                              
+    }
+  }
+  o_f<<endl<<"endmodule"<<endl<<endl;
 }
