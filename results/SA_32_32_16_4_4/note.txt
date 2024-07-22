@@ -1,0 +1,8 @@
+wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_input_up_4;  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_input_up_3;
+  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_input_up_2;  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_input_up_1;
+  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_input_left_4;  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_input_left_3;
+  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_input_left_2;  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_input_left_1;
+  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_pass_down_4;  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_pass_down_3;
+  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_pass_down_2;  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_pass_down_1;
+  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_pass_right_4;  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_pass_right_3;
+  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_pass_right_2;  wire [TOTAL_SIZE*DATA_WIDTH-1:0] actual_pass_right_1;
