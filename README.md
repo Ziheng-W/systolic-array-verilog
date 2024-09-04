@@ -1,3 +1,17 @@
+/** 编号规则：
+                  f      h 
+            c     e      g
+            b     d
+            a       
+
+  C B A   [3_3]  [3_2]  [3_1]
+
+F E D     [2_3]  [2_2]  [2_1]
+    
+H G       [1_3]  [1_2]  [1_1]
+
+*/
+
 # systolic-array-in-verilog
 
 用verilog实现的脉动阵列。
